@@ -1,0 +1,9 @@
+SONAME := libip_datx.dylib 
+
+CFLAGS := -dynamiclib -std=gnu99 -current_version 1.0
+
+$(SONAME): ipip.c
+	clang $(CFLAGS) -shared -ldl  $^ -o $@
+
+clean:
+	rm -f *.dylib

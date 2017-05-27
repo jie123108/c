@@ -31,6 +31,10 @@ int init(const char* ipdb) {
         return 0;
     }
     FILE *file = fopen(ipdb, "rb");
+    if(file == NULL){
+        return -1;
+    }
+
     fseek(file, 0, SEEK_END);
     long size = ftell(file);
     fseek(file, 0, SEEK_SET);
@@ -53,7 +57,7 @@ int init(const char* ipdb) {
     return 0;
 }
 
-int find(const char *ip, char *result) {
+int find(const char *ip, char *result, int rlen) {
     uint ips[4];
     int num = sscanf(ip, "%d.%d.%d.%d", &ips[0], &ips[1], &ips[2], &ips[3]);
     if (num == 4) {
@@ -70,8 +74,14 @@ int find(const char *ip, char *result) {
                 break;
             }
         }
+        if(index_length > rlen-1){
+            index_length = rlen-1;
+        }
+
         memcpy(result, ipip.data + ipip.offset + index_offset - 262144, index_length);
         result[index_length] = '\0';
+    }else{
+        return -1;
     }
     return 0;
 }
